@@ -7,4 +7,4 @@ RUN npm --registry=https://registry.npm.taobao.org install -g nodeppt
 COPY . /src
 
 EXPOSE 8080
-CMD ["/usr/local/bin/nodeppt", "start", "-p", "8080"]
+CMD ["/usr/local/bin/nodeppt", "start", "-p", "8080", "-d", "/src"]
