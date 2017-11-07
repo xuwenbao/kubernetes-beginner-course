@@ -89,6 +89,7 @@ int clone(int (fn)(void ), void *child_stack, int flags, void *arg);
 ----
 
 Docker - **Build**, **Ship**, and **Run** Any App, Anywhere
+<small>像不像java?</small>
 
 [slide]
 
