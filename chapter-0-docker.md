@@ -16,7 +16,7 @@ theme: moon
 ----
 * Part 01, 什么是容器
 * Part 02, 什么是Docker
-* Part 03, 演示
+* Part 03, 手动打造一个Docker
 * Part 04, 拓展
 * Part 05, 作业
 
@@ -101,6 +101,132 @@ Docker - **Build**, **Ship**, and **Run** Any App, Anywhere
 * **Ship**, 镜像仓库, Docker Reigstry、Docker Hub、Harbor ..., 便捷的获取方式
 * **Run**, 运行镜像, UnionFS、Namespace、CGroup ..., 隔离的运行环境
 
+[slide]
 
+## Docker的隐喻
+**集装箱改变世界**
+----
+
+![Port](/img/chapter-0-port.jpg)
+====
+![Container](/img/chapter-0-container.jpg)
+
+[slide]
+
+* Part 03, 手动打造一个Docker
+
+[slide]
+
+```shell
+# 安装Docker及其他工具, 操作系统Ubuntu 16.04
+
+apt-get update
+
+apt-get install -y ebtables socat apt-transport-https bash-completion ntp wget bridge-utils cgroup-tools tree
+
+apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'
+
+apt-get update
+
+apt-cache policy docker-engine
+apt-get install -y docker-engine
+```
+
+[slide]
+
+```shell
+# 了解Docker Image内部机制
+
+# 模拟Docker创建镜像目录
+mkdir /var/lib/xocker/
+mkdir /var/lib/xocker/image
+
+# 下载Demo容器镜像 busybox
+docker pull busybox:glibc
+
+# 另存镜像为tar包, 并解压
+cd /tmp
+docker save busybox:glibc -o busybox.tar
+mkdir busybox
+tar -xvf busybox.tar -C busybox/
+
+# 查看镜像配置文件
+cat  manifest.json | python3 -m json.tool
+
+# 查看layer内容
+cd 47f54add1c481ac7754f9d022c2c420099a16e78faf85b4f2926a96ee40277fe
+# 解压layer内容, 查看文件内容
+tar -xvf layer.tar
+# 构造一个假的镜像
+mv 47f54add1c481ac7754f9d022c2c420099a16e78faf85b4f2926a96ee40277fe /var/lib/xocker/image/busybox
+```
+
+[slide]
+
+```shell
+# 实现文件系统隔离(无联合文件系统)
+
+# 备份
+cp -r /var/lib/xocker/image/busybox/ /var/lib/xocker/image/busybox.bak
+# 文件系统隔离
+chroot /var/lib/xocker/image/busybox/ /bin/sh
+# 执行 rm -rf *, 然后退出看看效果
+# 恢复回来
+cp -r /var/lib/xocker/image/busybox.bak /var/lib/xocker/image/busybox
+```
+
+[slide]
+
+```shell
+# 实现文件系统隔离(联合文件系统 aufs)
+mkdir -p /var/lib/xocker/mnt/1
+mkdir -p /var/lib/xocker/mnt/1-data
+mkdir -p /var/lib/xocker/mnt/1-init
+mkdir -p /var/lib/xocker/mnt/1-init/etc/ && mkdir -p /var/lib/xocker/mnt/1-init/proc && echo "hello" > /var/lib/xocker/mnt/1-init/etc/myinit && tree /var/lib/xocker/mnt/1-init
+mount -t aufs -o dirs=/var/lib/xocker/mnt/1-data:/var/lib/xocker/mnt/1-init:/var/lib/xocker/image/busybox none /var/lib/xocker/mnt/1
+chroot /var/lib/xocker/mnt/1 /bin/sh
+touch /tmp/test.data
+rm /etc/myinit
+```
+
+[slide]
+
+```shell
+# 网络隔离
+
+# 准备一个网桥
+brctl addbr xocker0
+ip addr add 172.18.0.1/24 dev xocker0
+ip link set dev xocker0 up
+
+# 准备 veth peer
+ip link add dev veth0_1 type veth peer name veth1_1
+ip link set dev veth0_1 up
+ip link set veth0_1 master xocker0
+ip netns add netns_test
+ip link set veth1_1 netns netns_test
+ip netns exec netns_test ip link set dev lo up
+ip netns exec netns_test ip link set veth1_1 address 02:42:ac:11:00:01
+ip netns exec netns_test ip addr add 172.18.0.2/24 dev veth1_1
+ip netns exec netns_test ip link set dev veth1_1 up
+ip netns exec netns_test ip route add default via 172.18.0.2
+
+# 创建具有网络与文件系统隔离的容器
+cgcreate -g cpu,cpuacct,memory:/test
+cgexec -g "cpu,cpuacct,memory:/test"  ip netns exec netns_test unshare -fmuip --mount-proc chroot "/var/lib/xocker/mnt/1" /bin/sh -c "/bin/mount -t proc proc /proc && /bin/sh"
+```
+
+[slide]
+
+## 参考材料
+* Docker容器与容器云(书)
+* Docker源码分析(书)
+* [linux 网络虚拟化: network namespace简介](http://cizixs.com/2017/02/10/network-virtualization-network-namespace)
+
+[slide]
+
+## **大道至简**
+<small>预备课(完)</small>
 
 
