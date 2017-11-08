@@ -89,6 +89,7 @@ int clone(int (fn)(void ), void *child_stack, int flags, void *arg);
 ----
 
 Docker - **Build**, **Ship**, and **Run** Any App, Anywhere
+
 <small>像不像java?</small>
 
 [slide]
@@ -104,18 +105,20 @@ Docker - **Build**, **Ship**, and **Run** Any App, Anywhere
 [slide]
 
 ## Docker的隐喻
-**集装箱改变世界**
+
 ----
 
-![Port](/img/chapter-0-port.jpg)
-====
-![Container](/img/chapter-0-container.jpg)
+**集装箱改变世界**
 
 [slide]
 
 * Part 03, 手动打造一个Docker
 
 [slide]
+
+## 进阶
+
+----
 
 ```shell
 # 安装Docker及其他工具, 操作系统Ubuntu 16.04
@@ -220,8 +223,9 @@ cgexec -g "cpu,cpuacct,memory:/test"  ip netns exec netns_test unshare -fmuip --
 [slide]
 
 ## 参考材料
-* Docker容器与容器云(书)
-* Docker源码分析(书)
+----
+* Docker容器与容器云
+* Docker源码分析
 * [linux 网络虚拟化: network namespace简介](http://cizixs.com/2017/02/10/network-virtualization-network-namespace)
 
 [slide]
