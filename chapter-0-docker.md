@@ -17,8 +17,7 @@ theme: moon
 * Part 01, 什么是容器
 * Part 02, 什么是Docker
 * Part 03, 手动打造一个Docker
-* Part 04, 拓展
-* Part 05, 作业
+* Part 04, 参考材料
 
 [slide]
 
