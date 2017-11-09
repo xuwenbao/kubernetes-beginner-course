@@ -1,4 +1,4 @@
-title: Chapter 0, Docker简介
+title: Chapter 0, Docker原理简介
 speaker: Wenbao Xu
 url: https://github.com/xuwenbao/kubernetes-beginner-course
 transition: slide
@@ -7,7 +7,7 @@ theme: moon
 [slide]
 
 # Kubernetes从入门到放弃
-## 预备课 - Dokcer简介
+## 预备课 - Dokcer原理简介
 <small>分享人: Wenbao Xu</small>
 
 [slide]
@@ -175,7 +175,7 @@ cp -r /var/lib/xocker/image/busybox/ /var/lib/xocker/image/busybox.bak
 chroot /var/lib/xocker/image/busybox/ /bin/sh
 # 执行 rm -rf *, 然后退出看看效果
 # 恢复回来
-cp -r /var/lib/xocker/image/busybox.bak /var/lib/xocker/image/busybox
+rmdir /var/lib/xocker/image/busybox && mv /var/lib/xocker/image/busybox.bak /var/lib/xocker/image/busybox
 ```
 
 [slide]
