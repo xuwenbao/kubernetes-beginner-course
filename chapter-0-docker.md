@@ -226,10 +226,9 @@ cgexec -g "cpu,cpuacct,memory:/test"  ip netns exec netns_test unshare -fmuip --
 * Docker容器与容器云
 * Docker源码分析
 * [linux 网络虚拟化: network namespace简介](http://cizixs.com/2017/02/10/network-virtualization-network-namespace)
+* [镜像加速 | Docker 中国](http://www.docker-cn.com/registry-mirror)
 
 [slide]
 
 ## **大道至简**
 <small>预备课(完)</small>
-
-
