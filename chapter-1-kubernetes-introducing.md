@@ -62,6 +62,12 @@ Borg是一个分布式集群操作系统, 负责在集群层面管理任务编�
 * BNS(Borg名称解析系统), BNS名称(例如: /bns/<集群名>/<用户名>/<任务名>/<实例名>)用作任务实例间的连接. 
 * 任务声明资源, 在任务配置文件中声明需要的具体资源(例如: 3CPU核心, 2GB内存等)
 
+[slide]
+
+## Borg架构
+
+----
+
 ![Borg架构](/img/borg-arch.png)
 
 [slide]
@@ -119,6 +125,8 @@ Pod是Kubernetes最小的部署单元, 包含一个或多个紧密相关的业�
 * 一个唯一的网络IP
 * 挂载的存储资源
 
+[slide]
+
 ![Pod的组成与容器的关系](/img/Pod.png)
 
 [slide]
@@ -127,35 +135,41 @@ Pod是Kubernetes最小的部署单元, 包含一个或多个紧密相关的业�
 apiVersion: v1
 kind: Pod
 metadata:
-    name: webserver
+  name: webserver
     labels:
-        app:  demo
+      app:  demo
 spec:
-    containers:
-    - name: webserver-container
-        image: python:3.6
-        command: ['python', '-m', 'http.server']
-        ports:
-        - containerPort: 8000
+  containers:
+  - name: webserver-container
+    image: python:3.6
+    command: ['python', '-m', 'http.server']
+    ports:
+    - containerPort: 8000
 ```
 
 [slide]
 
-## 多容器设计模式 - Example 1, Sidecar(跨斗)
+## 多容器设计模式 - Sidecar(跨斗)
 
-![Sidecar](Pod - Sidecar containers.png) 
+----
 
-[slide]
-
-## 多容器设计模式 - Example 2, Ambassador(外交官)
-
-![Sidecar](Pod - Ambassador containers.png) 
+![Sidecar](/img/pod-sidecar.png) 
 
 [slide]
 
-## 多容器设计模式 - Example 3, Adapter(适配器)
+## 多容器设计模式 - Ambassador(外交官)
 
-![Sidecar](Pod - Adapter containers.png) 
+----
+
+![Sidecar](/img/pod-ambassador.png) 
+
+[slide]
+
+## 多容器设计模式 - Adapter(适配器)
+
+----
+
+![Sidecar](/img/pod-adapter.png) 
 
 [slide]
 
@@ -198,6 +212,40 @@ kubectl get pods -l 'app, env != dev'
 
 [slide]
 
+```yaml
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: webserver-rs
+  labels:
+    app: demo
+    tier: middleware
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo
+      tier: middleware
+    matchExpressions:
+      - {key: env, operator: In, values: [prod]}
+  template:
+    metadata:
+      labels:
+        app:  demo
+        tier: middleware
+        env: prod
+    spec:
+      containers:
+      - name: webserver-containers
+        image: python:3.6
+        command: ['python', '-m', 'http.server']
+        ports:
+        - containerPort: 8000
+
+```
+
+[slide]
+
 ## Service
 
 Service是对一组提供相同功能的Pods的抽象，并为它们提供一个统一的入口.
@@ -217,6 +265,24 @@ Service是对一组提供相同功能的Pods的抽象，并为它们提供一个
 
 [slide]
 
+```yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: webserver
+spec:
+  selector:
+    app: demo
+    tier: middleware
+    env: prod
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+```
+
+[slide]
+
 ## Deployment
 
 **时间原因待续**
@@ -224,6 +290,8 @@ Service是对一组提供相同功能的Pods的抽象，并为它们提供一个
 [slide]
 
 ## 资源对象一览
+
+[slide]
 
 Base
 * Pod
