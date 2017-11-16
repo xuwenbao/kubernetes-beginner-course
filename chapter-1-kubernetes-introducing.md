@@ -58,9 +58,11 @@ theme: moon
 
 Borg是一个分布式集群操作系统, 负责在集群层面管理任务编排工作.
 
-* 任务
-* BNS
-* 任务声明资源
+* 任务. 任务可以是无限运行的软件服务器, 或者是批量任务. 每个任务可以由多个实例组成(task).
+* BNS(Borg名称解析系统), BNS名称(例如: /bns/<集群名>/<用户名>/<任务名>/<实例名>)用作任务实例间的连接. 
+* 任务声明资源, 在任务配置文件中声明需要的具体资源(例如: 3CPU核心, 2GB内存等)
+
+![Borg架构](/img/borg-arch.png)
 
 [slide]
 
@@ -108,27 +110,116 @@ Kubernetes is not a mere orchestration system. In fact, it eliminates the need f
 
 [slide]
 
-## Pod
+## Pod, the smallest deployable object in the Kubernetes object model.
+
+----
+
+Pod是Kubernetes最小的部署单元, 包含一个或多个紧密相关的业务容器. 
+多容器被绑定调度到同一个节点, 且可共享:
+* 一个唯一的网络IP
+* 挂载的存储资源
+
+![Pod的组成与容器的关系](/img/Pod.png)
+
+[slide]
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+    name: webserver
+    labels:
+        app:  demo
+spec:
+    containers:
+    - name: webserver-container
+        image: python:3.6
+        command: ['python', '-m', 'http.server']
+        ports:
+        - containerPort: 8000
+```
+
+[slide]
+
+## 多容器设计模式 - Example 1, Sidecar(跨斗)
+
+![Sidecar](Pod - Sidecar containers.png) 
+
+[slide]
+
+## 多容器设计模式 - Example 2, Ambassador(外交官)
+
+![Sidecar](Pod - Ambassador containers.png) 
+
+[slide]
+
+## 多容器设计模式 - Example 3, Adapter(适配器)
+
+![Sidecar](Pod - Adapter containers.png) 
 
 [slide]
 
 ## Label
 
+----
+
+Label是可附加到各种资源(Pod、Node、Service等)上的 key = value 形式的键值对
+* 一个资源对象可以定义任意数量的Label
+* 一个Label也可以被添加到任意数量的资源对象上
+
 [slide]
 
-## Service
+## 通过Label Selector查询和筛选拥有某些Label的资源对象
+
+* name = redis-slave: 匹配所有具有标签 name=redis-slave的资源对象
+* env != production: 匹配所有不具有标签 env = production 的资源对象
+* name in (redis-master, redis-slave): 匹配所有具有标签 name = redis-master 或 name = redis-slave 的资源对象
+* name not in (php-frontend): 匹配所有不具有标签 name = php-frontend 的资源对象
+
+[slide]
+
+```console
+kubectl get pods -l env=prod
+kubectl get pods -l app
+kubectl get pods -l !app
+kubectl get pods -l 'app, env != dev'
+```
 
 [slide]
 
 ## Relication Controller/ReplicaSet
 
+----
+
+声明某种Pod的预期副本数量, 并保障在任意时候Pod数量都符合预期值. RC/RS定义包括如下几个部分:
+* Pod期待的副本数量
+* 用于筛选目标Pod的Label Selector
+* 当Pod的副本数量小于预期数量的时候, 用于创建新Pod的Pod模板(template)
+
+[slide]
+
+## Service
+
+Service是对一组提供相同功能的Pods的抽象，并为它们提供一个统一的入口.
+* 拥有固定的内部访问域名与IP
+* 自动实现服务发现与负载均衡
+* 配合Deployment等资源来保证后端容器的正常运行
+
+[slide]
+
+## Service类型
+
+* ClusterIP：默认类型，自动分配一个仅cluster内部可以访问的虚拟IP
+* NodePort：在ClusterIP基础上为Service在每台机器上绑定一个端口，这样就可以通过<NodeIP>:NodePort来访问改服务
+* LoadBalancer：在NodePort的基础上，借助cloud provider创建一个外部的负载均衡器，并将请求转发到<NodeIP>:NodePort
+
+> 可以将已有的服务以Service的形式加入到Kubernetes集群中来，只需要在创建Service的时候不指定Label selector，而是在Service创建好后手动为其添加endpoint
+
 [slide]
 
 ## Deployment
 
-[slide]
-
-## Namespace
+**时间原因待续**
 
 [slide]
 
