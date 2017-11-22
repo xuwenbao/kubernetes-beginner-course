@@ -350,6 +350,7 @@ RBAC
 * [Kubernetes权威指南(第2版)](https://book.douban.com/subject/26902153/)
 * [Borg, Mesos, Omega, and Kubernetes](https://share.weiyun.com/0a023c9256358752236f840f6cd31482)
 * [What is Kubernetes](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/)
+* [Declarative application management in Kubernetes](https://docs.google.com/document/d/1cLPGweVEYrVqQvBLJg6sxV-TrE5Rm2MNOBA_cxZP2WU/edit)
 
 [slide]
 
