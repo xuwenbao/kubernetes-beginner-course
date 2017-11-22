@@ -152,7 +152,7 @@ apt-get  install -y docker.io
 [slide]
 
 ```
-# 安装kubelet kubeadm
+# 安装kubelet kubeadm kubectl
 apt-get update && apt-get install -y apt-transport-https
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
@@ -167,7 +167,17 @@ apt-get install -y kubelet kubeadm kubectl
 ```
 # 初始化Master
 # 执行 swapoff -a 命令, 如出现 "running with swap on is not supported. Please disable swap" 错误
+# swapoff -a
 kubeadm init --pod-network-cidr=10.244.0.0/16
+```
+
+[slide]
+
+```
+# 配置kubectl
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
 [slide]
@@ -184,9 +194,19 @@ kubectl describe node
 
 ```
 # 初始化网络
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.0/Documentation/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubernetes-beginner-course/master/examples/chapter-2/kube-flannel.yaml
 # 查看Pod状态
 kubectl get pods --all-namespaces
+# 查看节点状态
+kubectl get nodes
+```
+
+[slide]
+
+```
+# 安装docker kubeadm
+# 添加node节点
+kubeadm join --token $init_token $apiserver-advertise-address:6443
 ```
 
 [slide]
