@@ -213,6 +213,11 @@ kubeadm join --token $init_token $apiserver-advertise-address:6443
 
 ## Part 04, 参考材料
 
+* [Kubernetes Design and Architecture](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/architecture.md)
+* [Kubernetes权威指南(第2版)](https://book.douban.com/subject/26902153/)
+* [KUBERNETES 兩步安裝一次上手](https://tachingchen.com/tw/blog/Kubernetes-Installation-With-Kubeadm/)
+* [Using kubeadm to Create a Cluster](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)
+
 [slide]
 
 ## **大道至简**
