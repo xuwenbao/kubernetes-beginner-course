@@ -64,7 +64,7 @@ data:
     {
       "Network": "10.244.0.0/16",
       "Backend": {
-        "Type": "udp"
+        "Type": "host-gw"
       }
     }
 ---
@@ -93,7 +93,7 @@ spec:
       serviceAccountName: flannel
       initContainers:
       - name: install-cni
-        image: quay.io/coreos/flannel:v0.9.0-amd64
+        image: xuwenbao/flannel:v0.9.0-amd64
         command:
         - cp
         args:
@@ -107,7 +107,7 @@ spec:
           mountPath: /etc/kube-flannel/
       containers:
       - name: kube-flannel
-        image: quay.io/coreos/flannel:v0.9.0-amd64
+        image: xuwenbao/flannel:v0.9.0-amd64
         command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr" ]
         securityContext:
           privileged: true
