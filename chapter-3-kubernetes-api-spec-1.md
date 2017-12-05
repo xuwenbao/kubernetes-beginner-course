@@ -15,9 +15,10 @@ theme: moon
 目录
 ----
 * Part 01, Kubernetes API概述
-* Part 02, Kubernetes的组件介绍
-* Part 03, Kubernetes的部署
-* Part 04, 参考材料
+* Part 02, Kubernetes API Group
+* Part 03, Kubernetes API Metadata
+* Part 04, Kubernetes API Spec/Status
+* Part 05, 参考材料
 
 [slide]
 
@@ -112,6 +113,10 @@ comments: >
 
 [slide]
 
+## Part 02, Kubernetes API Group
+
+[slide]
+
 ## API Group设计目标
 ----
 * 拆分单个 v1 API 成多个模块化分组, 每个分组可以独立地启用/禁用. 未来可以把单体API Server拆分成多个更小的组件.
@@ -134,6 +139,10 @@ comments: >
 
 [slide]
 
+## Part 03, Kubernetes API Metadata
+
+[slide]
+
 ## metadata, Object元素数据
 ----
 * namespace, 对象所属的命名空间, 如不指定, 对象将会被置于名为"default"的系统命名空间中
@@ -148,13 +157,151 @@ comments: >
 
 [slide]
 
-## status, 记录对象在系统中的当前状态
-----
+## Part 04, Kubernetes API Status
 
+[slide]
+
+## 通用Conditions
+----
+表示Object的条件列表, 由条件类型和状态值组成. 包含字段:
+* Type, 类型
+* Status, 状态. True/False/Unknown
+* LastHeartbeatTime
+* LastTransitionTime
+* Reason, 条件原因
+* Message, 条件描述
+
+[slide]
+
+## Pod Status
+----
+* phase Pending/Running/Succeeded/Failed/Unknown
+* conditions PodScheduled,Initialized,Ready
+* containerStatuses
+
+[slide]
+
+## Part 04, Kubernetes API Spec
+
+[slide]
+
+API Spec的详细定义可以在 [Kubernetes API Reference](https://kubernetes.io/docs/api-reference/v1.8) 中查看详细解释.
+
+[slide]
+
+## Container
+----
+* name
+* command/args
+* image/imagePullPolicy: Always, Never, IfNotPresent
+* livenessProbe/readinessProbe: exec,httpGet,tcp
+* resources
+* volumeMounts
+
+[slide]
+
+## Pod
+----
+* activeDeadlineSeconds/terminationGracePeriodSeconds
+* dnsPolicy: ClusterFirst,ClusterFirstWithHostNet,Default
+* hostNetwork/hostPID/hostIPC
+* initContainers/containers
+* imagePullSecrets
+* serviceAccountName
+* lifecycle: Hooks: postStart/preStop
+* restartPolicy: Always, OnFailure, Never
+* nodeName/nodeSelector
+* tolerations
+* affinity
+* volumes
+
+[slide]
+
+![Pod生命周期](/img/pod-lifecycle-create.png)
+
+[slide]
+
+## Service Spec
+----
+* clusterIP: None/IP
+* externalIPs
+* ports
+* selector
+* externalName
+* type: ExternalName, ClusterIP, NodePort, LoadBalancer
+
+[slide]
+
+## ReplicaSet Spec
+----
+* minReadySeconds
+* replicas
+* selector
+* template: PodTemplateSpec
+
+[slide]
+
+## DaemonSet Spec
+----
+* minReadySeconds
+* revisionHistoryLimit
+* selector
+* template
+* updateStrategy: RollingUpdate,OnDelete
+
+[slide]
+
+## Deployment Spec
+----
+* minReadySeconds
+* paused
+* replicas
+* selector
+* strategy: Recreate/RollingUpdate
+* rollingUpdate.maxSurge
+* rollingUpdate.maxUnavailable
+* revisionHistoryLimit
+* template: PodTemplateSpec
+
+[slide]
+
+## StatefulSet Spec
+----
+* podManagementPolicy: OrderedReady,Parallel
+* serviceName
+* replicas
+* revisionHistoryLimit
+* selector
+* template
+* updateStrategy: OnDelete,RollingUpdate
+* rollingUpdate.partition
+* volumeClaimTemplates: PersistentVolumeClaim
+
+[slide]
+
+## StatefulSet
+----
+* Pod Identity
+* ordinal: [0,N)
+* pod name: $(statefulset name)-$(ordinal)
+* pod dns: $(pod name).$(service name).$(namespace).svc.cluster.local
+* Storage
+* PersistentVolume Provisioner
+* volumeClaimTemplates 的定义优先级高于 PodTemplate 中的定义
+* PVC 的生命周期独立于 StatefulSet
+
+[slide]
+
+## ConfigMap
+----
+* data: object
 
 [slide]
 
 参考材料
 ----
+* [Kubernetes API Conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md)
 * [Kubernetes API Reference v1.8](https://kubernetes.io/docs/api-reference/v1.8/)
 * [Supporting multiple API groups](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/api-group.md)
+* [Using Kubernetes Health Checks](https://www.ianlewis.org/en/using-kubernetes-health-checks)
+* [Managing Compute Resources for Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
