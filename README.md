@@ -6,8 +6,8 @@
 -  [第一课：Kubernetes 概念概述](chapter-1-kubernetes-introducing.md)
 -  [第二课：Kubernetes 架构概述](chapter-2-kubernetes-architecture.md)
 -  [第三课：Kubernetes 的 API Spec](chapter-3-kubernetes-api-spec.md)
--  [第四课：Kubernetes 的 API Spec](chapter-4-kubernetes-api.md)
--  [第五课：Kubernetes 的应用案例](chapter-5-kubernetes-application-example.md)
+-  [第四课：Kubernetes 的应用案例](chapter-4-kubernetes-application-example.md)
+-  [第五课：Kubernetes 的包管理工具Helm](chapter-5-helm.md)
 
 ## 运行课件方式
 
