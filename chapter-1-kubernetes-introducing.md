@@ -285,7 +285,73 @@ spec:
 
 ## Deployment
 
-**时间原因待续**
+![Deployment](/img/deployment-layer.png) 
+
+[slide]
+
+```yaml
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: demo-deployment
+  labels:
+    app: demo
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: demo
+      tier: middleware
+    matchExpressions:
+      - {key: env, operator: In, values: [prod]}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      # maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app:  demo
+        tier: middleware
+        env: prod
+    spec:
+      containers:
+      - name: webserver-containers
+        image: python:3.6
+        command: ['python', '-m', 'http.server']
+        ports:
+        - containerPort: 8000
+```
+
+[slide]
+
+```
+kubectl get deployment
+kubectl get rs
+kubectl get pods
+```
+
+[slide]
+
+任何对PodTemplate的修改, 都会触发滚动升级. 例如:
+
+```shell
+# format
+$ kubectl set image deployment <deployment> <container>=<image> --record
+# example
+$ kubectl set image deployment demo-deployment webserver-containers=python:3.5 --record
+```
+
+[slide]
+
+```shell
+kubectl get deployment
+kubectl get rs
+kubectl get pods
+kubectl rollout history deployment/demo-deployment
+kubectl rollout undo deployment/demo-deployment
+```
 
 [slide]
 
@@ -350,6 +416,7 @@ RBAC
 * [Kubernetes权威指南(第2版)](https://book.douban.com/subject/26902153/)
 * [Borg, Mesos, Omega, and Kubernetes](https://share.weiyun.com/0a023c9256358752236f840f6cd31482)
 * [What is Kubernetes](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/)
+* [Performing a Rolling Update](https://kubernetes.io/docs/tutorials/kubernetes-basics/update-intro/)
 * [Declarative application management in Kubernetes](https://docs.google.com/document/d/1cLPGweVEYrVqQvBLJg6sxV-TrE5Rm2MNOBA_cxZP2WU/edit)
 
 [slide]

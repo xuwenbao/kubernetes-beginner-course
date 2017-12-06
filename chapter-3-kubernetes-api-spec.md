@@ -1,4 +1,4 @@
-title: Chapter 3, Kubernetes API Spec(Part 1)
+title: Chapter 3, Kubernetes API Spec
 speaker: Wenbao Xu
 url: https://github.com/xuwenbao/kubernetes-beginner-course
 transition: slide
@@ -7,7 +7,7 @@ theme: moon
 [slide]
 
 # Kubernetes从入门到放弃
-## 第三课 - Kubernetes API Spec(Part 1)
+## 第三课 - Kubernetes API Spec
 <small>分享人: Wenbao Xu</small>
 
 [slide]
@@ -260,7 +260,7 @@ API Spec的详细定义可以在 [Kubernetes API Reference](https://kubernetes.i
 * strategy: Recreate/RollingUpdate
 * rollingUpdate.maxSurge
 * rollingUpdate.maxUnavailable
-* revisionHistoryLimit
+* revisionHistoryLimit(Defaults to 10)
 * template: PodTemplateSpec
 
 [slide]
@@ -298,6 +298,32 @@ API Spec的详细定义可以在 [Kubernetes API Reference](https://kubernetes.i
 
 [slide]
 
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: special-config
+data:
+  special.how: very
+  special.type: charm
+```
+
+[slide]
+
+## 多种创建方式
+----
+
+```shell
+# Create ConfigMaps from directories
+kubectl create configmap game-config --from-file=docs/user-guide/configmap/kubectl
+# Create ConfigMaps from files
+kubectl create configmap game-config-2 --from-file=docs/user-guide/configmap/kubectl/game.properties
+# Create ConfigMaps from literal values
+kubectl create configmap special-config --from-literal=special.how=very --from-literal=special.type=charm
+```
+
+[slide]
+
 参考材料
 ----
 * [Kubernetes API Conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md)
@@ -305,3 +331,6 @@ API Spec的详细定义可以在 [Kubernetes API Reference](https://kubernetes.i
 * [Supporting multiple API groups](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/api-group.md)
 * [Using Kubernetes Health Checks](https://www.ianlewis.org/en/using-kubernetes-health-checks)
 * [Managing Compute Resources for Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
+
+## **大道至简**
+<small>第三课 - Kubernetes API Spec(完)</small>
