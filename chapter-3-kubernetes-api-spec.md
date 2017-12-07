@@ -161,6 +161,10 @@ comments: >
 
 [slide]
 
+大部分的 Kubernetes API 都有 Spec 和 Status 两个 Field。Spec 是让用户写入期望的状态，系统可以通过 Spec 读出用户的期望。Status 是系统写入观察到的状态，用户可以从中读出系统当前是什么状态。
+
+[slide]
+
 ## 通用Conditions
 ----
 表示Object的条件列表, 由条件类型和状态值组成. 包含字段:
@@ -331,6 +335,7 @@ kubectl create configmap special-config --from-literal=special.how=very --from-l
 * [Supporting multiple API groups](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/api-group.md)
 * [Using Kubernetes Health Checks](https://www.ianlewis.org/en/using-kubernetes-health-checks)
 * [Managing Compute Resources for Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
+* [谷歌大神详解 Kubernetes 配置管理最佳方法](https://mp.weixin.qq.com/s/VPzsm0d9jXWWMPjFIs4FYA)
 
 ## **大道至简**
 <small>第三课 - Kubernetes API Spec(完)</small>
