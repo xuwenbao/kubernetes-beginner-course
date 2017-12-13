@@ -15,7 +15,7 @@ theme: moon
 目录
 ----
 * Part 01, Kubernetes 故障排查
-* Part 02, KUbernetes 日志查看
+* Part 02, Kubernetes 日志查看
 * Part 03, Kubernetes 监控
 * Part 04, 参考材料
 
@@ -119,6 +119,16 @@ kubectl debug -c debug-shell --image=debian target-pod -- bash
 * 节点可以和Pod直接互通，不需要 NAT
 * Pod看到的自己 IP 应该和其他Pod看到的一样
 
+[slide]
+
+## 网络故障排查
+----
+*  确认同一主机上的 pod 网络是否互通，否，排查本机网络 arp, iptables
+*  确认跨主机 pod 网络是否互通
+*  确认 dns 服务是否正常
+*  确认请求 Service ClusterIP 是否正常 （排查 Service iptables) 
+*  确认 pod 到 apiserver 请求是否正常
+*  确认出 pod 请求公网是否正常
  
 [slide]
 
@@ -130,18 +140,119 @@ kubectl debug -c debug-shell --image=debian target-pod -- bash
 
 [slide]
 
+## Part 02, Kubernetes 日志
+
+[slide]
+
+## Container Log
+----
+- Container stdout/stderr
+- Docker Logger Driver (syslog, **journal, json-file**)
+- Log Sidecar
+    ```yanl
+    name: logsidecar
+    image: busybox:1.27.1
+    args: [/bin/sh, -c, 'tail -n+1 -F /var/log/logdir/logfile']
+    ```
+
+[slide]
+
+## Kubectl log
+----
+- Kubelet log api
+    - https://nodeip:10250/logs/pods/   
+- Pod log: /var/log/containers/<pod_name>_<pod_namespace>_<container_name>-<container_id>.log
+
+[slide]
+
+## Part 03, Kubernetes 监控
+
+[slide]
+
+![80%](https://github.com/kubernetes/community/raw/33160bede67e7355f123d8c3ba121f71a7a01411/contributors/design-proposals/monitoring_architecture.png?raw=true)
+
+[slide]
+
+## Kubernetes 监控涉及的组件
+----
+1. Cadvisor
+2. Kubelet Stats/Metrics API
+3. Heapster
+4. 自定义监控数据和自动伸缩
+4. Kube-state-metrics
+5. Prometheus
+6. Grafana
+
+[slide]
+
+## Cadvisor
+----
+- https://github.com/google/cadvisor
+- http://nodeip:4194/
+    - ContainerState
+    - PodState
+    - ImageFS 
+
+[slide]
+
+## Kubelet State API
+- https://nodeip:10250/stats/
+    - /container/
+    - /summary/
+- https://nodeip:10250/metrics/ 
+- 数据项
+    - filesystem
+    - network
+    - cpu
+    - memory
+
+[slide]
+
+## Heapster
+----
+- Backend(Sinks)
+    -  elasticsearch
+    -  influxdb
+    -  kafka
+    -  opentsdb
+    -  stackdriver
+
+[slide]
+
+## Kube-state-metrics 
+----
+生成新的 metrics
+
+[slide]
+
+## 自定义监控数据和自动伸缩
+----
+- [Arbitrary/Custom Metrics in the Horizontal Pod Autoscaler](https://github.com/kubernetes/features/issues/117)
+- 基于自定义 API 机制
+
+[slide]
+
+## Prometheus
+----
+- Metrics Type
+- Metrics Data Model(Label)
+- Metrics SDK(Kubelet,etc..)
+- Metrics Storage
+- Metrics Query
+- AlertManager
+- Web UI
+
+[slide]
+
 ## Part 04, 参考材料
 ----
-* [Kubernetes API Conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md)
-* [Kubernetes API Reference v1.8](https://kubernetes.io/docs/api-reference/v1.8/)
-* [Supporting multiple API groups](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/api-group.md)
-* [Using Kubernetes Health Checks](https://www.ianlewis.org/en/using-kubernetes-health-checks)
-* [Managing Compute Resources for Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
-* [谷歌大神详解 Kubernetes 配置管理最佳方法](https://mp.weixin.qq.com/s/VPzsm0d9jXWWMPjFIs4FYA)
+* [How to collect and graph Kubernetes metrics](https://www.datadoghq.com/blog/how-to-collect-and-graph-kubernetes-metrics/)
+* [Run Heapster in a Kubernetes cluster with an InfluxDB backend and a Grafana UI](https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md)
+* [Kubernetes监控之Heapster介绍](http://dockone.io/article/1881)
 
 [slide]
 
 ## **大道至简**
-<small>第三课 - Kubernetes API Spec(完)</small>
+<small>第四课 - Kubernetes 故障排查与监控(完)</small>
 
 
