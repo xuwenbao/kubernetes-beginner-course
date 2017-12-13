@@ -337,5 +337,7 @@ kubectl create configmap special-config --from-literal=special.how=very --from-l
 * [Managing Compute Resources for Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
 * [谷歌大神详解 Kubernetes 配置管理最佳方法](https://mp.weixin.qq.com/s/VPzsm0d9jXWWMPjFIs4FYA)
 
+[slide]
+
 ## **大道至简**
 <small>第三课 - Kubernetes API Spec(完)</small>
