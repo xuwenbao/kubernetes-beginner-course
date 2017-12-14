@@ -210,12 +210,7 @@ kubectl debug -c debug-shell --image=debian target-pod -- bash
 
 ## Heapster
 ----
-- Backend(Sinks)
-    -  elasticsearch
-    -  influxdb
-    -  kafka
-    -  opentsdb
-    -  stackdriver
+![Heapster](/img/kubernetes-heapster.png)
 
 [slide]
 
@@ -234,13 +229,7 @@ kubectl debug -c debug-shell --image=debian target-pod -- bash
 
 ## Prometheus
 ----
-- Metrics Type
-- Metrics Data Model(Label)
-- Metrics SDK(Kubelet,etc..)
-- Metrics Storage
-- Metrics Query
-- AlertManager
-- Web UI
+![Prometheus](/img/prometheus-arch.svg)
 
 [slide]
 
@@ -249,6 +238,7 @@ kubectl debug -c debug-shell --image=debian target-pod -- bash
 * [How to collect and graph Kubernetes metrics](https://www.datadoghq.com/blog/how-to-collect-and-graph-kubernetes-metrics/)
 * [Run Heapster in a Kubernetes cluster with an InfluxDB backend and a Grafana UI](https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md)
 * [Kubernetes监控之Heapster介绍](http://dockone.io/article/1881)
+* [理解Kubernetes网络之Flannel网络](http://tonybai.com/2017/01/17/understanding-flannel-network-for-kubernetes/)
 
 [slide]
 
