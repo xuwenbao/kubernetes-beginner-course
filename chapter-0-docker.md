@@ -1,4 +1,4 @@
-title: Chapter 0, Docker简介
+title: Chapter 0, Docker原理简介
 speaker: Wenbao Xu
 url: https://github.com/xuwenbao/kubernetes-beginner-course
 transition: slide
@@ -7,7 +7,7 @@ theme: moon
 [slide]
 
 # Kubernetes从入门到放弃
-## 预备课 - Dokcer简介
+## 预备课 - Dokcer原理简介
 <small>分享人: Wenbao Xu</small>
 
 [slide]
@@ -175,7 +175,7 @@ cp -r /var/lib/xocker/image/busybox/ /var/lib/xocker/image/busybox.bak
 chroot /var/lib/xocker/image/busybox/ /bin/sh
 # 执行 rm -rf *, 然后退出看看效果
 # 恢复回来
-cp -r /var/lib/xocker/image/busybox.bak /var/lib/xocker/image/busybox
+rmdir /var/lib/xocker/image/busybox && mv /var/lib/xocker/image/busybox.bak /var/lib/xocker/image/busybox
 ```
 
 [slide]
@@ -223,13 +223,12 @@ cgexec -g "cpu,cpuacct,memory:/test"  ip netns exec netns_test unshare -fmuip --
 
 ## 参考材料
 ----
-* Docker容器与容器云
-* Docker源码分析
+* [Docker容器与容器云](https://book.douban.com/subject/26593175/)
+* [Docker源码分析](https://book.douban.com/subject/26581184/)
 * [linux 网络虚拟化: network namespace简介](http://cizixs.com/2017/02/10/network-virtualization-network-namespace)
+* [镜像加速 | Docker 中国](http://www.docker-cn.com/registry-mirror)
 
 [slide]
 
 ## **大道至简**
 <small>预备课(完)</small>
-
-

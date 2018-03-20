@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: webserver
+    labels:
+        app: demo
+spec:
+    containers:
+    - name: webserver-container
+      image: python:3.6
+      command: ['python', '-m', 'http.server']
+      ports:
+      - containerPort: 8000
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+    name: webserver-dev
+    labels:
+        app:  demo
+        tier: middleware
+        env: dev
+spec:
+    containers:
+    - name: webserver-container
+      image: python:3.6
+      command: ['python', '-m', 'http.server']
+      ports:
+      - containerPort: 8000
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+    name: webserver-prod
+    labels:
+        app:  demo
+        tier: middleware
+        env: prod
+spec:
+    containers:
+    - name: webserver-container
+      image: python:3.6
+      command: ['python', '-m', 'http.server']
+      ports:
+      - containerPort: 8000

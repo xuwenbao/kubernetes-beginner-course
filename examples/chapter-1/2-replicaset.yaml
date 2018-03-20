@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: webserver-rs
+  labels:
+    app: demo
+    tier: middleware
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo
+      tier: middleware
+    matchExpressions:
+      - {key: env, operator: In, values: [prod]}
+  template:
+    metadata:
+      labels:
+        app:  demo
+        tier: middleware
+        env: prod
+    spec:
+      containers:
+      - name: webserver-containers
+        image: python:3.6
+        command: ['python', '-m', 'http.server']
+        ports:
+        - containerPort: 8000
