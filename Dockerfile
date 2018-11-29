@@ -1,4 +1,4 @@
-FROM node:9.0.0
+FROM 192.168.65.128:8082/node:9.0.0
 MAINTAINER Wenbao Xu<xuwenbao@chinacloud.com.cn>
 
 # install nodeppt
